@@ -4,7 +4,7 @@
 - C programming language
 - MPI
 - OpenMPI
-- gcc, cc (craype complier)
+- gcc, cc (cray complier)
 - thread and process utilizations
 
 # Not every solution has a correct or perfect implementation for them, feel free to contact me if anything :)
