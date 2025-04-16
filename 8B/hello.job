@@ -1,0 +1,19 @@
+#!/bin/bash
+#SBATCH --job-name=helo_hybrid      # Job name
+#SBATCH --partition=cpu             # Partition name
+#SBATCH --nodes=1                   # Number of nodes
+#SBATCH --ntasks=6                  # Total MPI processes
+#SBATCH --cpus-per-task=4           # OpenMP threads per MPI process
+#SBATCH --time=00:00:30             # Max execution time (hh:mm:ss)
+#SBATCH --output=hello_output.log   # Standard output log
+#SBATCH --error=hello_error.log     # Error log
+
+# Load necessary module
+module load mpi
+
+# Set OpenMP environment variable
+export OMP_NUM_THREADS=4
+
+# Run the hybrid MPI+OpenMP program
+srun ./hello
+

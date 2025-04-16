@@ -1,0 +1,34 @@
+#!/bin/bash
+#SBATCH --job-name=device_query_job
+#SBATCH --partition=gpu
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --cpus-per-task=1
+#SBATCH --time=00:00:30
+#SBATCH --output=device_query_job_%j.out
+#SBATCH --error=device_query_job_%j.err
+
+# Query the number of available GPUs
+gpu_count=$(nvidia-smi -L | wc -l)
+
+# Check if there is at least 1 GPU available
+if [ $gpu_count -gt 0 ]; then
+  # Check if there are fewer than 2 GPUs available
+  if [ $gpu_count -lt 2 ]; then
+    echo "There isn't enough GPU for allocation, going with current allocation of GPU count: $gpu_count"
+  fi
+  # Set the --gres flag to the number of available GPUs
+  #SBATCH --gres=gpu:$gpu_count
+
+  # Load the CUDA module
+  module load cuda
+
+  # Compile
+  nvcc device_query.cu -o device_query
+
+  # Run
+  ./device_query
+else
+  echo "No GPUs available on this node."
+  exit 1
+fi
