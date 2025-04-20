@@ -1,0 +1,50 @@
+# Hybrid MPI+OpenMP Implementation Documentation (eggwar_hybrid.c)
+==============================================================
+
+DESCRIPTION:
+-----------
+This program enhances the Easter egg hunt simulation by combining MPI for 
+distributed computing across nodes and OpenMP for shared-memory parallelism 
+within each node.
+
+HOW IT WORKS:
+-----------
+1. MPI divides the field across multiple processes (potentially on different nodes)
+2. Within each process, OpenMP creates multiple threads to parallelize the search
+3. This creates a two-level parallelism: across nodes (MPI) and within nodes (OpenMP)
+
+COMPILATION:
+----------
+$ mpicc -fopenmp -o eggwar_hybrid eggwar_hybrid.c
+
+EXECUTION:
+---------
+# Set number of OpenMP threads per MPI process
+$ export OMP_NUM_THREADS=4
+
+# Run with 2 MPI processes, each with 4 threads
+$ mpirun -np 2 ./eggwar_hybrid
+
+# Run with verbose output
+$ mpirun -np 2 ./eggwar_hybrid -v
+
+# Using Slurm with explicit thread count
+$ srun -n 2 --cpus-per-task=4 ./eggwar_hybrid
+
+# Reset OpenMP threads when done (if needed)
+$ unset OMP_NUM_THREADS
+
+PARAMETERS:
+----------
+-v    Verbose mode - prints field contents and detailed search information
+
+CONFIGURATION:
+------------
+The following parameters can be modified in the source code:
+- N: Field size (NxN grid), default is 100x100
+- E: Egg density percentage, default is 10% of grid cells
+
+NOTES:
+-----
+- For optimal performance, match OMP_NUM_THREADS to the number of cores per node
+- Avoid oversubscription by ensuring total threads <= total cores

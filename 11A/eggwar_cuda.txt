@@ -1,0 +1,49 @@
+# CUDA GPU Implementation Documentation (eggwar_cuda.cu)
+====================================================
+
+DESCRIPTION:
+-----------
+This program implements the Easter egg hunt simulation using NVIDIA's CUDA platform
+to leverage GPU acceleration, which can process thousands of grid cells in parallel.
+
+HOW IT WORKS:
+-----------
+1. The field is created and initialized on the CPU
+2. The field data is transferred to the GPU memory
+3. A CUDA kernel launches thousands of threads organized in a 2D grid,
+   where each thread checks one cell
+4. When eggs are found, an atomic counter is incremented
+5. Results are transferred back to the CPU
+
+COMPILATION:
+----------
+$ nvcc -o eggwar_cuda eggwar_cuda.cu
+
+EXECUTION:
+---------
+# Basic execution
+$ ./eggwar_cuda
+
+# Run with verbose output
+$ ./eggwar_cuda -v
+
+# Using Slurm on GPU partition
+$ srun --partition=gpu --gres=gpu:1 ./eggwar_cuda
+
+PARAMETERS:
+----------
+-v    Verbose mode - prints field contents, kernel launch details, and compares
+      GPU results with CPU verification
+
+CONFIGURATION:
+------------
+The following parameters can be modified in the source code:
+- N: Field size (NxN grid), default is 100x100
+- E: Egg density percentage, default is 10% of grid cells
+- BLOCK_SIZE: Thread block dimensions, default is 16x16
+
+NOTES:
+-----
+- Requires NVIDIA GPU with CUDA support
+- The implementation uses CUDA events for accurate GPU timing
+- Verbose mode includes CPU verification to ensure correctness

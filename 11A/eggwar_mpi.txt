@@ -1,0 +1,41 @@
+# MPI Implementation Documentation (eggwar_mpi.c)
+===============================================
+
+DESCRIPTION:
+-----------
+This program simulates an Easter egg hunt using the Message Passing Interface (MPI)
+for distributed parallel computing. It divides a 2D field into rows and assigns
+different processes to search different sections of the field in parallel.
+
+HOW IT WORKS:
+-----------
+1. The master process (rank 0) creates and initializes the field with randomly 
+   placed eggs
+2. The field is distributed to all worker processes
+3. Each process searches its assigned portion of the field in parallel
+4. Results are collected back at the master process for final reporting
+
+COMPILATION:
+----------
+$ mpicc -o eggwar_mpi eggwar_mpi.c
+
+EXECUTION:
+---------
+# Run with 4 MPI processes
+$ mpirun -np 4 ./eggwar_mpi
+
+# Run with verbose output
+$ mpirun -np 4 ./eggwar_mpi -v
+
+# Using Slurm
+$ srun -n 4 ./eggwar_mpi
+
+PARAMETERS:
+----------
+-v    Verbose mode - prints field contents and detailed search information
+
+CONFIGURATION:
+------------
+The following parameters can be modified in the source code:
+- N: Field size (NxN grid), default is 100x100
+- E: Egg density percentage, default is 10% of grid cells
